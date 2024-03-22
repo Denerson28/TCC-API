@@ -7,6 +7,8 @@ builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["Conne
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IPdfFileService, PdfFileService>();
+
 
 
 builder.Services.AddControllers();

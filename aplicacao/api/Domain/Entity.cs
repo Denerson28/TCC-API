@@ -2,7 +2,7 @@
 {
     public abstract class Entity
     {
-        public Entity() 
+        public Entity()
         {
             Id = Guid.NewGuid();
         }

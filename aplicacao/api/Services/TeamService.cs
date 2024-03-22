@@ -32,9 +32,9 @@ namespace api.Services
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public List<Team> GetAll()
+        public async Task<List<Team>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Teams.ToListAsync();
         }
     }
 }

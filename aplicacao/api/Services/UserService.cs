@@ -41,7 +41,7 @@ namespace api.Services
 
                     return user; // Retorna o novo usuário criado
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     throw; // Re-lança a exceção para ser tratada externamente
@@ -51,12 +51,35 @@ namespace api.Services
 
         public User Get(Guid id)
         {
-            throw new NotImplementedException();
+
+            User user = _context.Users.Find(id);
+
+            return user;
         }
 
         public List<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Users.ToList();
+        }
+
+        public async Task<User> Update(Guid userId, UserDTO userDTO)
+        {
+            var existingUser = await _context.Users.FindAsync(userId);
+
+            if (existingUser == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            // Atualiza os campos do usuário com os novos valores
+            existingUser.Name = userDTO.Name;
+            existingUser.Email = userDTO.Email;
+            existingUser.Password = userDTO.Password;
+            existingUser.Role = userDTO.Role;
+
+            await _context.SaveChangesAsync();
+
+            return existingUser;
         }
     }
 }

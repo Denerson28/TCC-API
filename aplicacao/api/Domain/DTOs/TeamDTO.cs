@@ -1,7 +1,5 @@
-﻿using api.Domain.Classes;
-using Flunt.Notifications;
+﻿using Flunt.Notifications;
 using Flunt.Validations;
-using System.Data;
 
 namespace api.Domain.DTOs
 {

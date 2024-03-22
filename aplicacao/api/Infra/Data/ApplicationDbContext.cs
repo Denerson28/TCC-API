@@ -9,6 +9,7 @@ namespace api.Infra.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<PdfFile> PdfFiles { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -33,11 +34,19 @@ namespace api.Infra.Data
             builder.Entity<Team>()
                 .HasKey(t => t.Id);
 
+            builder.Entity<PdfFile>().ToTable("PdfFiles");
+            builder.Entity<PdfFile>().HasKey(p => p.Id);
+
+
             // Configurar relacionamento um-para-muitos entre Team e User
             builder.Entity<Team>()
                         .HasMany(t => t.Users)             // Um time pode ter muitos usuários
                         .WithOne();                        // Um usuário pertence a um time
 
+            // Define a relação entre PdfFile e User
+            builder.Entity<User>()
+                        .HasMany(u => u.PdfFiles)          // Um Usuário pode ter vários Pdfs
+                        .WithOne();                        // O Pdf pertence a um usuário
         }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configuration)

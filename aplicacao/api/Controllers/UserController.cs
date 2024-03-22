@@ -1,5 +1,6 @@
 ﻿using api.Domain.Classes;
 using api.Domain.DTOs;
+using api.Services;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using RockBank.Utils;
@@ -41,8 +42,42 @@ namespace api.Controllers
             {
                 return Results.BadRequest(ex.Message); // Retorna um resultado de erro com a mensagem de exceção
             }
+        }
 
+        [HttpGet]
+        public  IResult Get(Guid id)
+        {
 
+            try
+            {
+                User user = _userService.Get(id);
+
+                if (user == null)
+                {
+                    return Results.NotFound(); // Retorna NotFound se o usuário não for encontrado
+                }
+
+                return Results.Ok(user); // Retorna o usuário encontrado
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500); // Retorna um erro interno do servidor se ocorrer uma exceção
+            }
+        }
+
+        [HttpPut("{Id}")]
+        public async Task<IResult> UpdateUser(Guid Id, UserDTO userDTO)
+        {
+            try
+            {
+                User updatedUser = await _userService.Update(Id, userDTO);
+
+                return Results.Ok(updatedUser);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
         }
     }
 }

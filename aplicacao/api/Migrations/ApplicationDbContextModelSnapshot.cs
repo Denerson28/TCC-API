@@ -22,6 +22,36 @@ namespace api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("api.Domain.Classes.PdfFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PdfFiles", (string)null);
+                });
+
             modelBuilder.Entity("api.Domain.Classes.Team", b =>
                 {
                     b.Property<Guid>("Id")
@@ -74,6 +104,15 @@ namespace api.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("api.Domain.Classes.PdfFile", b =>
+                {
+                    b.HasOne("api.Domain.Classes.User", null)
+                        .WithMany("PdfFiles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("api.Domain.Classes.User", b =>
                 {
                     b.HasOne("api.Domain.Classes.Team", null)
@@ -86,6 +125,11 @@ namespace api.Migrations
             modelBuilder.Entity("api.Domain.Classes.Team", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("api.Domain.Classes.User", b =>
+                {
+                    b.Navigation("PdfFiles");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,6 +13,7 @@ namespace api.Domain.DTOs
         public string Password { get; set; }
         public string Role { get; set; }
         public Guid TeamId { get; set; }
+        public List<PdfFile> pdfFiles { get; set; }
 
         private void Validate()
         {
@@ -34,6 +35,7 @@ namespace api.Domain.DTOs
             Password = password;
             Role = role;
             TeamId = teamId;
+            pdfFiles = new List<PdfFile>();
             Validate();
         }
     }
