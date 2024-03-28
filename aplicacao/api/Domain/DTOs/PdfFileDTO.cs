@@ -6,8 +6,9 @@ namespace api.Domain.DTOs
     public class PdfFileDTO : Notifiable<Notification>
     {
         public string Name { get; set; }
-        public byte[] Content { get; set; }
+        public string Content { get; set; }
         public string Description { get; set; }
+        public Guid UserId {  get; set; }
 
 
 
@@ -17,11 +18,13 @@ namespace api.Domain.DTOs
             var contract = new Contract<PdfFileDTO>()
                 .IsNotNullOrEmpty(Name, "Name")
                 .IsNotNullOrEmpty(Description, "Description")
-                .IsNotNull(Content, "Content");
+                .IsNotNull(UserId, "UserId")
+                .IsNotNullOrEmpty(Content, "Content");
+                
 
             AddNotifications(contract);
         }
-        public PdfFileDTO(string Name, byte[] content, string description) 
+        public PdfFileDTO(string Name, string content, string description) 
         {
             this.Name = Name;
             this.Content = content;

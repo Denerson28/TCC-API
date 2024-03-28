@@ -1,6 +1,8 @@
 ﻿using api.Domain.Classes;
+using api.Domain.DTOs;
 using api.Infra.Data;
 using api.Services.Interfaces;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
@@ -14,7 +16,7 @@ namespace api.Services
             _context = context;
         }
 
-        public async Task Upload(PdfFile pdf)
+        public async Task Upload(PdfFileDTO pdf)
         {
             // Verifica se foi enviado um arquivo
             if (pdf == null || pdf.Content == null || pdf.Content.Length == 0)
@@ -30,12 +32,14 @@ namespace api.Services
                     throw new ArgumentException("Nenhum arquivo enviado.");
                 }
 
+                byte[] pdfBytes = Convert.FromBase64String(pdf.Content);
                 // Salva o arquivo no banco de dados
                 var newPdfFile = new PdfFile
                 {
                     Name = pdf.Name,
-                    Content = pdf.Content,
-                    UserId = pdf.UserId // Define o ID do usuário
+                    Content = pdfBytes,
+                    UserId = pdf.UserId, // Define o ID do usuário
+                    Description = pdf.Description
                 };
                 _context.PdfFiles.Add(newPdfFile);
                 await _context.SaveChangesAsync();

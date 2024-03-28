@@ -1,4 +1,5 @@
 ﻿using api.Domain.Classes;
+using api.Domain.DTOs;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace api.Controllers
 
 
         [HttpPost]
-        public async Task<IResult> UploadFile([FromBody] PdfFile pdf)
+        public async Task<IResult> UploadFile([FromBody] PdfFileDTO pdf)
         {
             try
             {
