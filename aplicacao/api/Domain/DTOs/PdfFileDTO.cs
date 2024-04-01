@@ -24,11 +24,12 @@ namespace api.Domain.DTOs
 
             AddNotifications(contract);
         }
-        public PdfFileDTO(string Name, string content, string description) 
+        public PdfFileDTO(string Name, string content, string description, Guid userId) 
         {
             this.Name = Name;
             this.Content = content;
             this.Description = description;
+            this.UserId = userId;
 
             Validate();
         }
