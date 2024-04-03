@@ -12,11 +12,12 @@
             
         }
 
-        public PdfFile(string name, byte[] content, string description)
+        public PdfFile(string name, byte[] content, string description, Guid userId)
         {
             this.Name = name;
             this.Content = content;
             this.Description = description;
+            this.UserId = userId;
         }
     }
 }

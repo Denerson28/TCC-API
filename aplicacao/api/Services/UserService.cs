@@ -81,5 +81,30 @@ namespace api.Services
 
             return existingUser;
         }
+
+        public User GetUserByEmail(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            return user;
+        }
+
+        public bool CheckPassword(Guid userId, string password)
+        {
+            var user = _context.Users.Find(userId);
+
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            // Verifica se a senha fornecida corresponde à senha armazenada
+            return user.Password == password;
+        }
     }
 }
