@@ -1,10 +1,12 @@
 ﻿using api.Domain.Classes;
 using api.Domain.DTOs;
 using api.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PdfFileController

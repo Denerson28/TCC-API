@@ -14,10 +14,12 @@ namespace api.Controllers
     public class LoginController
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public LoginController(IUserService userService)
+        public LoginController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
 
@@ -35,7 +37,7 @@ namespace api.Controllers
                 Results.BadRequest();
             }
 
-            var key = Encoding.ASCII.GetBytes("A@fderwfQQSDXCCer34asjsedlofASDS");
+            var key = Encoding.ASCII.GetBytes(_configuration["JwtBearerTokenSettings:SecretKey"]);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -44,8 +46,8 @@ namespace api.Controllers
                     new Claim(ClaimTypes.Email, login.Email)
                 }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Audience = "sqlserver",
-                Issuer = "Issuer"
+                Audience = _configuration["JwtBearerTokenSettings:Audience"],
+                Issuer = _configuration["JwtBearerTokenSettings:Issuer"]
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

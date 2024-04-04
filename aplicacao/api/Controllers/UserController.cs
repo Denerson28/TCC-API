@@ -2,11 +2,13 @@
 using api.Domain.DTOs;
 using api.Services;
 using api.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RockBank.Utils;
 
 namespace api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController
