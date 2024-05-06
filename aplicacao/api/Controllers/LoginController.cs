@@ -43,7 +43,8 @@ namespace api.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Email, login.Email)
+                    new Claim(ClaimTypes.Email, login.Email),
+                    new Claim("userType", user.UserType)
                 }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Audience = _configuration["JwtBearerTokenSettings:Audience"],

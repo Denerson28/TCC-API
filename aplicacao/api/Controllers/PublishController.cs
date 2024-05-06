@@ -9,18 +9,18 @@ namespace api.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class PdfFileController
+    public class PublishController
     {
-        private readonly IPdfFileService _pdfFileService;
+        private readonly IPublishService _pdfFileService;
 
-        public PdfFileController(IPdfFileService pdfFileService) 
+        public PublishController(IPublishService pdfFileService) 
         {
             _pdfFileService = pdfFileService;
         }
 
 
         [HttpPost]
-        public async Task<IResult> UploadFile([FromBody] PdfFileDTO pdf)
+        public async Task<IResult> UploadFile([FromBody] PublishDTO pdf)
         {
             try
             {

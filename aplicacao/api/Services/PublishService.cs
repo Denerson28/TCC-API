@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
 {
-    public class PdfFileService : IPdfFileService
+    public class PublishService : IPublishService
     {
         private readonly ApplicationDbContext _context;
 
-        public PdfFileService(ApplicationDbContext context)
+        public PublishService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task Upload(PdfFileDTO pdf)
+        public async Task Upload(PublishDTO pdf)
         {
             // Verifica se foi enviado um arquivo
             if (pdf == null || pdf.Content == null || pdf.Content.Length == 0)
@@ -34,21 +34,21 @@ namespace api.Services
 
                 byte[] pdfBytes = Convert.FromBase64String(pdf.Content);
                 // Salva o arquivo no banco de dados
-                var newPdfFile = new PdfFile
+                var newPdfFile = new Publish
                 {
                     Name = pdf.Name,
-                    Content = pdfBytes,
+                    PdfContent = pdfBytes,
                     UserId = pdf.UserId, // Define o ID do usuário
                     Description = pdf.Description
                 };
-                _context.PdfFiles.Add(newPdfFile);
+                _context.Publishes.Add(newPdfFile);
                 await _context.SaveChangesAsync();
 
                 // Atualiza a lista de PDFs do usuário correspondente
-                var user = await _context.Users.Include(u => u.PdfFiles).FirstOrDefaultAsync(u => u.Id == pdf.UserId);
+                var user = await _context.Users.Include(u => u.Publishes).FirstOrDefaultAsync(u => u.Id == pdf.UserId);
                 if (user != null)
                 {
-                    user.PdfFiles.Add(newPdfFile);
+                    user.Publishes.Add(newPdfFile);
                     await _context.SaveChangesAsync();
                 }
             }

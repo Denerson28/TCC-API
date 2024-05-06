@@ -4,24 +4,27 @@
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public string UserType { get; set; }
         public string Role { get; set; }
         public Guid TeamId { get; set; }
-        public List<PdfFile> PdfFiles { get; set; }
+
+        public List<Publish> Publishes { get; set; }
 
         public User()
         {
-            PdfFiles = new List<PdfFile>();
+            Publishes = new List<Publish>();
         }
 
-        public User(string name, string email, string password, string role, Guid team)
+        public User(string name, string email, string password,string userType, string role, Guid team)
         {
             
             this.Name = name;
             this.Email = email;
             this.Password = password;
+            this.UserType = userType;
             this.Role = role;
             this.TeamId = team;
-            PdfFiles = new List<PdfFile>();
+            Publishes = new List<Publish>();
         }
 
     }

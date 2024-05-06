@@ -18,11 +18,13 @@ namespace api.Services
 
         public async Task<User> Create(UserDTO userDTO)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var register = _context.Database.BeginTransaction())
             {
+
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
                 try
                 {
-                    User user = new User(userDTO.Name, userDTO.Email, userDTO.Password, userDTO.Role, userDTO.TeamId);
+                    User user = new User(userDTO.Name, userDTO.Email, hashedPassword,userDTO.UserType, userDTO.Role, userDTO.TeamId);
 
                     _context.Users.Add(user);
 
@@ -37,13 +39,13 @@ namespace api.Services
                     }
 
                     await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                    await register.CommitAsync();
 
                     return user; // Retorna o novo usuário criado
                 }
                 catch (Exception ex)
                 {
-                    await transaction.RollbackAsync();
+                    await register.RollbackAsync();
                     throw; // Re-lança a exceção para ser tratada externamente
                 }
             }
@@ -64,6 +66,9 @@ namespace api.Services
 
         public async Task<User> Update(Guid userId, UserDTO userDTO)
         {
+
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+
             var existingUser = await _context.Users.FindAsync(userId);
 
             if (existingUser == null)
@@ -74,7 +79,8 @@ namespace api.Services
             // Atualiza os campos do usuário com os novos valores
             existingUser.Name = userDTO.Name;
             existingUser.Email = userDTO.Email;
-            existingUser.Password = userDTO.Password;
+            existingUser.Password = hashedPassword;
+            existingUser.UserType = userDTO.UserType;
             existingUser.Role = userDTO.Role;
 
             await _context.SaveChangesAsync();
@@ -104,7 +110,7 @@ namespace api.Services
             }
 
             // Verifica se a senha fornecida corresponde à senha armazenada
-            return user.Password == password;
+            return BCrypt.Net.BCrypt.Verify(password, user.Password);
         }
     }
 }

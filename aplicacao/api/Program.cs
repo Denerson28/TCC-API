@@ -11,7 +11,7 @@ builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["Conne
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
-builder.Services.AddScoped<IPdfFileService, PdfFileService>();
+builder.Services.AddScoped<IPublishService, PublishService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -40,6 +40,21 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser(); // Requer que o usuário esteja autenticado
+        policy.RequireClaim("userType", "admin"); // Requer a claim "userType" com valor "admin"
+    });
+
+    options.AddPolicy("UserPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser(); // Requer que o usuário esteja autenticado
+        policy.RequireClaim("userType", "user"); // Requer a claim "userType" com valor "user"
+    });
+});
+
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseRouting();
@@ -53,6 +68,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        var seeder = new DataSeeder(dbContext);
+        seeder.Seed(); // Seed the database
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An error occurred while seeding the database.");
+        Console.WriteLine(ex.Message);
+    }
+}
 
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 

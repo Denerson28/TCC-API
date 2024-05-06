@@ -21,7 +21,7 @@ namespace api.Controllers
             _userService = userService;
         }
 
-
+        [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
         public async Task<IResult> CreateAsync(UserDTO userDTO)
         {

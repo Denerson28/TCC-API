@@ -12,28 +12,24 @@ using api.Infra.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240322031343_addUserAndTeamAndPdfFile")]
-    partial class addUserAndTeamAndPdfFile
+    [Migration("20240505232918_AddUserAndTeamAndPublish")]
+    partial class AddUserAndTeamAndPublish
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("api.Domain.Classes.PdfFile", b =>
+            modelBuilder.Entity("api.Domain.Classes.Publish", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("Content")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -45,6 +41,10 @@ namespace api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<byte[]>("PdfContent")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -52,7 +52,7 @@ namespace api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PdfFiles", (string)null);
+                    b.ToTable("Publishes", (string)null);
                 });
 
             modelBuilder.Entity("api.Domain.Classes.Team", b =>
@@ -100,6 +100,11 @@ namespace api.Migrations
                     b.Property<Guid>("TeamId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TeamId");
@@ -107,10 +112,10 @@ namespace api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("api.Domain.Classes.PdfFile", b =>
+            modelBuilder.Entity("api.Domain.Classes.Publish", b =>
                 {
                     b.HasOne("api.Domain.Classes.User", null)
-                        .WithMany("PdfFiles")
+                        .WithMany("Publishes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -132,7 +137,7 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Domain.Classes.User", b =>
                 {
-                    b.Navigation("PdfFiles");
+                    b.Navigation("Publishes");
                 });
 #pragma warning restore 612, 618
         }

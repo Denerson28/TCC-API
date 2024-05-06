@@ -1,21 +1,20 @@
 ﻿namespace api.Domain.Classes
 {
-    public class PdfFile : Entity
+    public class Publish : Entity
     {
-        public byte[] Content {  get; set; }
+        public byte[] PdfContent {  get; set; }
         public Guid UserId {  get; set; }
         public string Description {  get; set; }
 
 
-        public PdfFile()
+        public Publish()
         {
             
         }
 
-        public PdfFile(string name, byte[] content, string description, Guid userId)
+        public Publish(byte[] content, string description, Guid userId)
         {
-            this.Name = name;
-            this.Content = content;
+            this.PdfContent = content;
             this.Description = description;
             this.UserId = userId;
         }

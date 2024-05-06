@@ -3,7 +3,7 @@ using Flunt.Validations;
 
 namespace api.Domain.DTOs
 {
-    public class PdfFileDTO : Notifiable<Notification>
+    public class PublishDTO : Notifiable<Notification>
     {
         public string Name { get; set; }
         public string Content { get; set; }
@@ -15,16 +15,14 @@ namespace api.Domain.DTOs
 
         private void Validate()
         {
-            var contract = new Contract<PdfFileDTO>()
-                .IsNotNullOrEmpty(Name, "Name")
+            var contract = new Contract<PublishDTO>()
                 .IsNotNullOrEmpty(Description, "Description")
-                .IsNotNull(UserId, "UserId")
-                .IsNotNullOrEmpty(Content, "Content");
+                .IsNotNull(UserId, "UserId");
                 
 
             AddNotifications(contract);
         }
-        public PdfFileDTO(string Name, string content, string description, Guid userId) 
+        public PublishDTO(string Name, string content, string description, Guid userId) 
         {
             this.Name = Name;
             this.Content = content;

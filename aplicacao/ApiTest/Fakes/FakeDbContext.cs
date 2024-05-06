@@ -17,6 +17,6 @@ namespace ApiTest.Fakes
         {
         }
 
-        public DbSet<PdfFile> PdfFiles { get; set; }
+        public DbSet<Publish> PdfFiles { get; set; }
     }
 }

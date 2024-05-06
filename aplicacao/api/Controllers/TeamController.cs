@@ -21,7 +21,7 @@ namespace api.Controllers
             _teamService = teamService;
         }
 
-
+        [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
         public IResult Create(TeamDTO teamDTO)
         {

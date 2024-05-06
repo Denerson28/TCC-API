@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class addUserAndTeamAndPdfFile : Migration
+    public partial class AddUserAndTeamAndPublish : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,7 @@ namespace api.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Role = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
@@ -46,20 +47,20 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PdfFiles",
+                name: "Publishes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PdfContent = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PdfFiles", x => x.Id);
+                    table.PrimaryKey("PK_Publishes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PdfFiles_Users_UserId",
+                        name: "FK_Publishes_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -67,8 +68,8 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PdfFiles_UserId",
-                table: "PdfFiles",
+                name: "IX_Publishes_UserId",
+                table: "Publishes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -81,7 +82,7 @@ namespace api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PdfFiles");
+                name: "Publishes");
 
             migrationBuilder.DropTable(
                 name: "Users");

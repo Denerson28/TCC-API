@@ -9,7 +9,7 @@ namespace api.Infra.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Team> Teams { get; set; }
-        public DbSet<PdfFile> PdfFiles { get; set; }
+        public DbSet<Publish> Publishes { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -25,6 +25,8 @@ namespace api.Infra.Data
                 .Property(p => p.TeamId).IsRequired();
             builder.Entity<User>()
                 .Property(c => c.Name).IsRequired();
+            builder.Entity<User>()
+                .Property(c => c.UserType).IsRequired();
 
             // Configurar a chave primária da entidade User
             builder.Entity<User>()
@@ -34,8 +36,8 @@ namespace api.Infra.Data
             builder.Entity<Team>()
                 .HasKey(t => t.Id);
 
-            builder.Entity<PdfFile>().ToTable("PdfFiles");
-            builder.Entity<PdfFile>().HasKey(p => p.Id);
+            builder.Entity<Publish>().ToTable("Publishes");
+            builder.Entity<Publish>().HasKey(p => p.Id);
 
 
             // Configurar relacionamento um-para-muitos entre Team e User
@@ -43,9 +45,9 @@ namespace api.Infra.Data
                         .HasMany(t => t.Users)             // Um time pode ter muitos usuários
                         .WithOne();                        // Um usuário pertence a um time
 
-            // Define a relação entre PdfFile e User
+            // Define a relação entre Publish e User
             builder.Entity<User>()
-                        .HasMany(u => u.PdfFiles)          // Um Usuário pode ter vários Pdfs
+                        .HasMany(u => u.Publishes)          // Um Usuário pode ter várias publicações
                         .WithOne();                        // O Pdf pertence a um usuário
         }
 

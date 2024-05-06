@@ -3,8 +3,8 @@ using api.Domain.DTOs;
 
 namespace api.Services.Interfaces
 {
-    public interface IPdfFileService
+    public interface IPublishService
     {
-        public Task Upload(PdfFileDTO pdf);
+        public Task Upload(PublishDTO pdf);
     }
 }
