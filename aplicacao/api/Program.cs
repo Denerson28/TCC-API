@@ -2,7 +2,6 @@ using api.Infra.Data;
 using api.Services;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -12,6 +11,7 @@ builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["Conne
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IPublishService, PublishService>();
+builder.Services.AddScoped<IRecommendService, RecommendService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -55,13 +55,10 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-var app = builder.Build();
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -83,6 +80,12 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine(ex.Message);
     }
 }
+
+app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 

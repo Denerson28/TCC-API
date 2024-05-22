@@ -47,12 +47,12 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public  IResult Get(Guid id)
+        public async Task<IResult> Get(Guid id)
         {
 
             try
             {
-                User user = _userService.Get(id);
+                User user = await _userService.Get(id);
 
                 if (user == null)
                 {

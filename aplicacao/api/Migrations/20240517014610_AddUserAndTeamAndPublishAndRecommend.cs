@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserAndTeamAndPublish : Migration
+    public partial class AddUserAndTeamAndPublishAndRecommend : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,9 +67,35 @@ namespace api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Recommendations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recommendations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recommendations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Publishes_UserId",
                 table: "Publishes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recommendations_UserId",
+                table: "Recommendations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -83,6 +109,9 @@ namespace api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Publishes");
+
+            migrationBuilder.DropTable(
+                name: "Recommendations");
 
             migrationBuilder.DropTable(
                 name: "Users");

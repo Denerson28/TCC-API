@@ -2,7 +2,6 @@
 using api.Domain.DTOs;
 using api.Infra.Data;
 using api.Services.Interfaces;
-using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
@@ -26,11 +25,6 @@ namespace api.Services
 
             try
             {
-                // Verifica se foi enviado um arquivo
-                if (pdf == null || pdf.Content == null || pdf.Content.Length == 0)
-                {
-                    throw new ArgumentException("Nenhum arquivo enviado.");
-                }
 
                 byte[] pdfBytes = Convert.FromBase64String(pdf.Content);
                 // Salva o arquivo no banco de dados
@@ -56,7 +50,6 @@ namespace api.Services
             {
                 throw new ApplicationException($"Erro ao enviar e salvar arquivo PDF: {ex.Message}");
             }
-
         }
     }
 }

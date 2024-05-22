@@ -51,12 +51,18 @@ namespace api.Services
             }
         }
 
-        public User Get(Guid id)
+        public async Task<User> Get(Guid id)
         {
 
             User user = _context.Users.Find(id);
 
-            return user;
+
+            return await _context.Users
+                .Include(r => r.RecommendsReceived)
+                .Include(p => p.Publishes)
+                .FirstOrDefaultAsync(u => u.Id == id);
+                //.Include(p => p.Publishes)
+                //.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public List<User> GetAll()

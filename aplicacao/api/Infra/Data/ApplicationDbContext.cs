@@ -1,7 +1,5 @@
-﻿using api.Domain;
-using api.Domain.Classes;
+﻿using api.Domain.Classes;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace api.Infra.Data
 {
@@ -10,6 +8,7 @@ namespace api.Infra.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Publish> Publishes { get; set; }
+        public DbSet<Recommend> Recommendations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -36,6 +35,10 @@ namespace api.Infra.Data
             builder.Entity<Team>()
                 .HasKey(t => t.Id);
 
+            //Configurar a chave primária da entidade Recommend
+            builder.Entity<Recommend>()
+                .HasKey(r => r.Id);
+
             builder.Entity<Publish>().ToTable("Publishes");
             builder.Entity<Publish>().HasKey(p => p.Id);
 
@@ -49,9 +52,14 @@ namespace api.Infra.Data
             builder.Entity<User>()
                         .HasMany(u => u.Publishes)          // Um Usuário pode ter várias publicações
                         .WithOne();                        // O Pdf pertence a um usuário
+
+            // Define a relação entre Recommend e User
+            builder.Entity<User>()
+                        .HasMany(u => u.RecommendsReceived) // Um Usuário pode receber várias recomendações
+                        .WithOne();                        // A recomendação pertence a um usuário
         }
 
-    protected override void ConfigureConventions(ModelConfigurationBuilder configuration)
+        protected override void ConfigureConventions(ModelConfigurationBuilder configuration)
         {
             configuration.Properties<string>()
                 .HaveMaxLength(100);

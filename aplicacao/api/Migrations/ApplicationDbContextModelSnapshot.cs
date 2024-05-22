@@ -52,6 +52,35 @@ namespace api.Migrations
                     b.ToTable("Publishes", (string)null);
                 });
 
+            modelBuilder.Entity("api.Domain.Classes.Recommend", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Recommendations");
+                });
+
             modelBuilder.Entity("api.Domain.Classes.Team", b =>
                 {
                     b.Property<Guid>("Id")
@@ -118,6 +147,15 @@ namespace api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("api.Domain.Classes.Recommend", b =>
+                {
+                    b.HasOne("api.Domain.Classes.User", null)
+                        .WithMany("RecommendsReceived")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("api.Domain.Classes.User", b =>
                 {
                     b.HasOne("api.Domain.Classes.Team", null)
@@ -135,6 +173,8 @@ namespace api.Migrations
             modelBuilder.Entity("api.Domain.Classes.User", b =>
                 {
                     b.Navigation("Publishes");
+
+                    b.Navigation("RecommendsReceived");
                 });
 #pragma warning restore 612, 618
         }

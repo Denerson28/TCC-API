@@ -8,11 +8,14 @@
         public string Role { get; set; }
         public Guid TeamId { get; set; }
 
+        public ICollection<Recommend> RecommendsReceived { get; set; }
+
         public List<Publish> Publishes { get; set; }
 
         public User()
         {
             Publishes = new List<Publish>();
+            RecommendsReceived = new List<Recommend>();
         }
 
         public User(string name, string email, string password,string userType, string role, Guid team)
@@ -25,6 +28,7 @@
             this.Role = role;
             this.TeamId = team;
             Publishes = new List<Publish>();
+            RecommendsReceived = new List<Recommend>();
         }
 
     }
