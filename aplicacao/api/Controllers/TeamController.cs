@@ -40,13 +40,13 @@ namespace api.Controllers
             return Results.Created($"team/{team.Id}", team);
         }
 
-        [HttpGet] 
-        public async Task<IResult> Get(Guid id) 
+        [HttpGet("{teamId}")]
+        public async Task<IResult> Get(Guid teamId) 
         {
 
             try
             {
-                Team team = await _teamService.Get(id);
+                Team team = await _teamService.Get(teamId);
 
                 if (team == null)
                 {

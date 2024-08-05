@@ -41,5 +41,12 @@ namespace api.Controllers
                 return Results.BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("{userId}")]
+        public async Task<IResult> GetRecommendationsForUser(Guid userId)
+        {
+            var recommendations = await _recommendService.GetRecommendations(userId);
+            return Results.Ok(recommendations);
+        }
     }
 }

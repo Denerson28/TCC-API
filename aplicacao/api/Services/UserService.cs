@@ -24,7 +24,7 @@ namespace api.Services
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
                 try
                 {
-                    User user = new User(userDTO.Name, userDTO.Email, hashedPassword,userDTO.UserType, userDTO.Role, userDTO.TeamId);
+                    User user = new User(userDTO.Name, userDTO.Photo, userDTO.Email, hashedPassword,userDTO.UserType, userDTO.Role, userDTO.TeamId);
 
                     _context.Users.Add(user);
 
@@ -61,8 +61,6 @@ namespace api.Services
                 .Include(r => r.RecommendsReceived)
                 .Include(p => p.Publishes)
                 .FirstOrDefaultAsync(u => u.Id == id);
-                //.Include(p => p.Publishes)
-                //.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public List<User> GetAll()

@@ -7,3 +7,6 @@
 /aplicacao/api/obj
 /aplicacao/ApiTest/obj
 /aplicacao/ApiTest/bin/Debug/net8.0
+/aplicacao/api/.config
+/aplicacao/api/bin/Release/net8.0
+/aplicacao/ApiTest/bin/Release/net8.0

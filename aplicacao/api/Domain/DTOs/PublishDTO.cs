@@ -5,7 +5,7 @@ namespace api.Domain.DTOs
 {
     public class PublishDTO : Notifiable<Notification>
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
         public string Content { get; set; }
         public string Description { get; set; }
         public Guid UserId {  get; set; }
@@ -22,9 +22,9 @@ namespace api.Domain.DTOs
 
             AddNotifications(contract);
         }
-        public PublishDTO(string Name, string content, string description, Guid userId) 
+        public PublishDTO(string title, string content, string description, Guid userId) 
         {
-            this.Name = Name;
+            this.Title = title;
             this.Content = content;
             this.Description = description;
             this.UserId = userId;

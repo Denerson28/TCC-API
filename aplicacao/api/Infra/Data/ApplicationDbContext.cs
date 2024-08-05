@@ -23,9 +23,9 @@ namespace api.Infra.Data
             builder.Entity<User>()
                 .Property(p => p.TeamId).IsRequired();
             builder.Entity<User>()
-                .Property(c => c.Name).IsRequired();
+                .Property(p => p.Email).IsRequired();
             builder.Entity<User>()
-                .Property(c => c.UserType).IsRequired();
+                .Property(p => p.UserType).IsRequired();
 
             // Configurar a chave primária da entidade User
             builder.Entity<User>()

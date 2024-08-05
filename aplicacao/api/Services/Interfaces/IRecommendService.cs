@@ -5,6 +5,7 @@ namespace api.Services.Interfaces
 {
     public interface IRecommendService
     {
-        public Task<Recommend> Upload(RecommendDTO recommendation);
+        public Task<RecommendDTO> Upload(RecommendDTO recommendation);
+        Task<List<RecommendDTO>> GetRecommendations(Guid userId);
     }
 }

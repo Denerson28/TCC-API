@@ -3,6 +3,7 @@ using api.Domain.DTOs;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RockBank.Utils;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -26,6 +27,15 @@ namespace api.Controllers
         [HttpPost]
         public IResult Login([FromBody] LoginDTO login)
         {
+            if(login == null)
+            {
+                Results.BadRequest();
+            }
+            if (!login.IsValid)
+            {
+                return Results.ValidationProblem(login.Notifications.ConvertToProblemDetails());
+            }
+
             User user = _userService.GetUserByEmail(login.Email);
 
             if (user == null)

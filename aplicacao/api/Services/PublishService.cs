@@ -30,7 +30,7 @@ namespace api.Services
                 // Salva o arquivo no banco de dados
                 var newPdfFile = new Publish
                 {
-                    Name = pdf.Name,
+                    Title = pdf.Title,
                     PdfContent = pdfBytes,
                     UserId = pdf.UserId, // Define o ID do usuário
                     Description = pdf.Description

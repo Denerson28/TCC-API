@@ -13,8 +13,9 @@ namespace api.Domain.DTOs
         public void Validate()
         {
             var contract = new Contract<LoginDTO>()
-                .IsNotNullOrEmpty(Email, "Email")
+                .IsEmail(Email, "Email")
                 .IsNotNullOrEmpty(Password, "Password");
+                
 
             AddNotifications(contract);
         }

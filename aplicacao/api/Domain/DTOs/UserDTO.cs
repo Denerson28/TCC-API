@@ -15,12 +15,13 @@ namespace api.Domain.DTOs
         public string Role { get; set; }
         public Guid TeamId { get; set; }
         public List<Publish> Publishes { get; set; }
+        public string Photo { get; set; }
 
         private void Validate()
         {
             var contract = new Contract<UserDTO>()
                 .IsNotNullOrEmpty(Name, "Name")
-                .IsNotNullOrEmpty(Email, "Email")
+                .IsEmail(Email, "Email")
                 .IsNotNullOrEmpty(Password, "Password")
                 .IsNotNullOrEmpty(UserType, "UserType")
                 .IsNotNullOrEmpty(Role, "Role");
@@ -29,16 +30,22 @@ namespace api.Domain.DTOs
 
         }
 
-        public UserDTO(string name, string email, string password, string userTpe, string role, Guid teamId)
+        public UserDTO(string name, string photo, string email, string password, string userType, string role, Guid teamId)
         {
             Name = name;
+            Photo = photo;
             Email = email;
             Password = password;
-            UserType = userTpe;
+            UserType = userType;
             Role = role;
             TeamId = teamId;
             Publishes = new List<Publish>();
             Validate();
+        }
+
+        public UserDTO()
+        {
+
         }
     }
 }
