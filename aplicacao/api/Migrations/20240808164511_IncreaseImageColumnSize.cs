@@ -5,14 +5,14 @@
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class IncreasePhotoColumnSize : Migration
+    public partial class IncreaseImageColumnSize : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Photo",
-                table: "Users",
+                name: "Image",
+                table: "Publishes",
                 type: "nvarchar(max)", // Ou nvarchar(2000) para um tamanho específico
                 nullable: true,
                 oldClrType: typeof(string),
@@ -22,8 +22,8 @@ namespace api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Photo",
-                table: "Users",
+                name: "Image",
+                table: "Publishes",
                 type: "nvarchar(255)", // Tamanho anterior
                 nullable: true,
                 oldClrType: typeof(string),

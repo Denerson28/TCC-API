@@ -12,8 +12,8 @@ using api.Infra.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240805015134_IncreasePhotoColumnSize")]
-    partial class IncreasePhotoColumnSize
+    [Migration("20240808212106_AttRecommendsAndFeedbacks")]
+    partial class AttRecommendsAndFeedbacks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,20 +25,51 @@ namespace api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("api.Domain.Classes.Publish", b =>
+            modelBuilder.Entity("api.Domain.Classes.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("PdfContent")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedbacks");
+                });
+
+            modelBuilder.Entity("api.Domain.Classes.Publish", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -63,6 +94,14 @@ namespace api.Migrations
 
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -126,8 +165,16 @@ namespace api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("TeamId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserType")
                         .IsRequired()
@@ -139,6 +186,15 @@ namespace api.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("api.Domain.Classes.Feedback", b =>
+                {
+                    b.HasOne("api.Domain.Classes.User", null)
+                        .WithMany("FeedbacksReceived")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("api.Domain.Classes.Publish", b =>
@@ -175,6 +231,8 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Domain.Classes.User", b =>
                 {
+                    b.Navigation("FeedbacksReceived");
+
                     b.Navigation("Publishes");
 
                     b.Navigation("RecommendsReceived");

@@ -25,7 +25,7 @@ namespace api.Controllers
 
 
         [HttpPost]
-        public IResult Login([FromBody] LoginDTO login)
+        public IResult Login([FromBody] LoginRequestDTO login)
         {
             if(login == null)
             {
@@ -54,11 +54,16 @@ namespace api.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Email, login.Email),
-                    new Claim("userType", user.UserType)
+                    new Claim("userType", user.UserType),
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim("userId", user.Id.ToString()),
+
                 }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Audience = _configuration["JwtBearerTokenSettings:Audience"],
-                Issuer = _configuration["JwtBearerTokenSettings:Issuer"]
+                Issuer = _configuration["JwtBearerTokenSettings:Issuer"],
+                Expires = DateTime.UtcNow.AddYears(1),
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -66,7 +71,14 @@ namespace api.Controllers
 
             return Results.Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user = new
+                {
+                    photo = user.Photo,
+                    stars = user.Stars,
+                    publishes = user.Publishes,
+                }
+
             });
 
         }

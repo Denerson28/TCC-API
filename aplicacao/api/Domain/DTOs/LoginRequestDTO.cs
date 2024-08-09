@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 
 namespace api.Domain.DTOs
 {
-    public class LoginDTO : Notifiable<Notification>
+    public class LoginRequestDTO : Notifiable<Notification>
     {
         public string Email { get; set; }
 
@@ -12,7 +12,7 @@ namespace api.Domain.DTOs
 
         public void Validate()
         {
-            var contract = new Contract<LoginDTO>()
+            var contract = new Contract<LoginRequestDTO>()
                 .IsEmail(Email, "Email")
                 .IsNotNullOrEmpty(Password, "Password");
                 
@@ -21,7 +21,7 @@ namespace api.Domain.DTOs
         }
 
 
-        public LoginDTO(string email, string password)
+        public LoginRequestDTO(string email, string password)
         {
             this.Email = email;
             this.Password = password;

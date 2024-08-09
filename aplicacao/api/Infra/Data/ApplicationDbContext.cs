@@ -10,6 +10,8 @@ namespace api.Infra.Data
         public DbSet<Publish> Publishes { get; set; }
         public DbSet<Recommend> Recommendations { get; set; }
 
+        public DbSet<Feedback> Feedbacks { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -38,6 +40,10 @@ namespace api.Infra.Data
             //Configurar a chave primária da entidade Recommend
             builder.Entity<Recommend>()
                 .HasKey(r => r.Id);
+
+            //Configurar a chave primária da entidade Feedback
+            builder.Entity<Feedback>()
+                .HasKey(f => f.Id);
 
             builder.Entity<Publish>().ToTable("Publishes");
             builder.Entity<Publish>().HasKey(p => p.Id);

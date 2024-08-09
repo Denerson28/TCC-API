@@ -15,34 +15,38 @@ namespace api.Services
             _context = context;
         }
 
-        public async Task Upload(PublishDTO pdf)
+        public async Task Upload(Guid userId, PublishDTO publish)
         {
             // Verifica se foi enviado um arquivo
-            if (pdf == null || pdf.Content == null || pdf.Content.Length == 0)
+            if (string.IsNullOrEmpty(publish.Image))
             {
                 throw new ArgumentException("Nenhum arquivo enviado.");
             }
 
             try
             {
-
-                byte[] pdfBytes = Convert.FromBase64String(pdf.Content);
+            
                 // Salva o arquivo no banco de dados
-                var newPdfFile = new Publish
+                var newPublishFile = new Publish
                 {
-                    Title = pdf.Title,
-                    PdfContent = pdfBytes,
-                    UserId = pdf.UserId, // Define o ID do usuário
-                    Description = pdf.Description
+                    Title = publish.Title,
+                    Image = publish.Image,
+                    UserId = userId, // Define o ID do usuário
+                    Description = publish.Description
                 };
-                _context.Publishes.Add(newPdfFile);
+
+                _context.Publishes.Add(newPublishFile);
                 await _context.SaveChangesAsync();
 
                 // Atualiza a lista de PDFs do usuário correspondente
-                var user = await _context.Users.Include(u => u.Publishes).FirstOrDefaultAsync(u => u.Id == pdf.UserId);
+                var user = await _context.Users.Include(u => u.Publishes).FirstOrDefaultAsync(u => u.Id == userId);
                 if (user != null)
                 {
-                    user.Publishes.Add(newPdfFile);
+                    user.Publishes.Add(newPublishFile);
+
+                    // Incrementa 3 estrelas
+                    user.Stars += 3;
+
                     await _context.SaveChangesAsync();
                 }
             }

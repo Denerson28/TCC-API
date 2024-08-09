@@ -12,8 +12,8 @@ using api.Infra.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240805015111_AddUserAndTeamAndPublish")]
-    partial class AddUserAndTeamAndPublish
+    [Migration("20240808164123_AddUser_Team_Publish_Recommends_Feedbacks")]
+    partial class AddUser_Team_Publish_Recommends_Feedbacks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,30 @@ namespace api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("api.Domain.Classes.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedbacks");
+                });
 
             modelBuilder.Entity("api.Domain.Classes.Publish", b =>
                 {
@@ -36,9 +60,10 @@ namespace api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("PdfContent")
+                    b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -126,8 +151,16 @@ namespace api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("TeamId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserType")
                         .IsRequired()
@@ -139,6 +172,15 @@ namespace api.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("api.Domain.Classes.Feedback", b =>
+                {
+                    b.HasOne("api.Domain.Classes.User", null)
+                        .WithMany("FeedbacksReceived")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("api.Domain.Classes.Publish", b =>
@@ -175,6 +217,8 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Domain.Classes.User", b =>
                 {
+                    b.Navigation("FeedbacksReceived");
+
                     b.Navigation("Publishes");
 
                     b.Navigation("RecommendsReceived");

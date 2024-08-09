@@ -6,58 +6,68 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuração do banco de dados
 builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["ConnectionString:sqlserver"]);
 
+// Injeção de dependência dos serviços
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IPublishService, PublishService>();
-builder.Services.AddScoped<IRecommendService, RecommendService>();
 
+// Configuração dos controladores e Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication(x =>
+// Configuração da autenticação e JWT
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters()
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateActor = true,
-        ValidateAudience = true,
         ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ClockSkew = TimeSpan.Zero,
         ValidIssuer = builder.Configuration["JwtBearerTokenSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtBearerTokenSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JwtBearerTokenSettings:SecretKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtBearerTokenSettings:SecretKey"])),
+        ClockSkew = TimeSpan.Zero // Reduz a tolerância para expiração do token
     };
 });
-
-builder.Services.AddAuthorization();
 
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy =>
     {
-        policy.RequireAuthenticatedUser(); // Requer que o usuário esteja autenticado
-        policy.RequireClaim("userType", "admin"); // Requer a claim "userType" com valor "admin"
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("userType", "admin");
     });
 
     options.AddPolicy("UserPolicy", policy =>
     {
-        policy.RequireAuthenticatedUser(); // Requer que o usuário esteja autenticado
-        policy.RequireClaim("userType", "user"); // Requer a claim "userType" com valor "user"
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("userType", "user");
     });
 });
 
+// Configuração do CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173") // Permitir apenas estas origens
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials(); // Permite o uso de cookies e headers de autorização
+    });
+});
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -83,6 +93,9 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+// Aplicar o middleware de CORS antes de Authentication e Authorization
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

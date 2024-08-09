@@ -1,15 +1,23 @@
 ﻿using api.Domain.Classes;
 using api.Domain.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services.Interfaces
 {
     public interface IUserService
     {
-        public List<User> GetAll();
-        public Task<User> Get(Guid id);
+        public List<UserRankingDTO> GetAll();
+        public Task<UserSearchedDTO> Get(Guid id);
         public Task<User> Create(UserDTO userDTO);
-        public Task<User> Update(Guid Id,UserDTO userDTO);
+        public Task<UserUpdateDTO> Update(Guid Id,UserUpdateDTO userDTO);
+        public Task<List<UserRankingDTO>> GetUsersRanking();
+        public Task<List<PublishDTO>> GetPublishesByUserId(Guid userId);
         public User GetUserByEmail(string email);
         public bool CheckPassword(Guid userId, string password);
+        public Task<List<RecommendResponseDTO>> GetRecommendsByUserId(Guid userId);
+        public Task<List<FeedbackResponseDTO>> GetFeedbacksByUserId(Guid userId);
+        public Task<FeedbackResponseDTO> CreateFeedback(Guid userId, FeedbackRequestDTO feedback);
+        public Task<RecommendResponseDTO> CreateRecommend(Guid userId, RecommendRequestDTO recommendation);
+
     }
 }

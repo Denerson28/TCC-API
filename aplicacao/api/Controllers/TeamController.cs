@@ -61,5 +61,13 @@ namespace api.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IResult> GetAll()
+        {
+            List<Team> teams = await _teamService.GetAll();
+
+            return Results.Ok(teams);
+        }
     }
 }

@@ -3,7 +3,7 @@ using Flunt.Validations;
 
 namespace api.Domain.DTOs
 {
-    public class RecommendDTO : Notifiable<Notification>
+    public class RecommendResponseDTO : Notifiable<Notification>
     {
     public Guid UserId { get; set; }
     public Guid AuthorId { get; set; }
@@ -11,7 +11,7 @@ namespace api.Domain.DTOs
     public string AuthorProfilePictureUrl { get; set; }
     public string Description { get; set; }
 
-    public RecommendDTO(Guid userId, Guid authorId, string authorName, string authorProfilePictureUrl, string description)
+    public RecommendResponseDTO(Guid userId, Guid authorId, string authorName, string authorProfilePictureUrl, string description)
     {
         UserId = userId;
         AuthorId = authorId;
@@ -24,7 +24,7 @@ namespace api.Domain.DTOs
 
         private void Validate()
         {
-            var contract = new Contract<RecommendDTO>()
+            var contract = new Contract<RecommendResponseDTO>()
                 .IsNotNullOrEmpty(Description, "Description")
                 .IsNotNullOrEmpty(AuthorProfilePictureUrl, "AuthorProfilePictureUrl")
                 .IsNotNullOrEmpty(AuthorName, "AuthorName")

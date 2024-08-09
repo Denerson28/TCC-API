@@ -1,5 +1,6 @@
 ﻿using api.Domain.Classes;
 using api.Domain.DTOs;
+using api.Services;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,22 +12,22 @@ namespace api.Controllers
     [Route("[controller]")]
     public class PublishController
     {
-        private readonly IPublishService _pdfFileService;
+        private readonly IPublishService _publishService;
 
-        public PublishController(IPublishService pdfFileService) 
+        public PublishController(IPublishService publishService) 
         {
-            _pdfFileService = pdfFileService;
+            _publishService = publishService;
         }
 
 
-        [HttpPost]
-        public async Task<IResult> UploadFile([FromBody] PublishDTO pdf)
+        [HttpPost("{userId}")]
+        public async Task<IResult> Create(Guid userId, [FromBody] PublishDTO publish)
         {
             try
             {
-                await _pdfFileService.Upload(pdf);
+                await _publishService.Upload(userId, publish);
 
-                return Results.Ok("Arquivo PDF enviado e salvo com sucesso no banco de dados.");
+                return Results.Created();
             }
             catch (Exception ex)
             {

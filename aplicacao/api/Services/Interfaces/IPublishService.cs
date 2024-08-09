@@ -5,6 +5,6 @@ namespace api.Services.Interfaces
 {
     public interface IPublishService
     {
-        public Task Upload(PublishDTO pdf);
+        public Task Upload(Guid userId,PublishDTO pdf);
     }
 }
