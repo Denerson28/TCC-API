@@ -5,29 +5,29 @@
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class IncreaseImageColumnSize : Migration
+    public partial class AttPublishesInDescription : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Image",
+                name: "Description",
                 table: "Publishes",
-                type: "nvarchar(max)",
+                type: "nvarchar(max)", 
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(255)");
+                oldType: "nvarchar(255)"); 
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Image",
+                name: "Description",
                 table: "Publishes",
-                type: "nvarchar(255)",
+                type: "nvarchar(255)", 
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)"); 
+                oldType: "nvarchar(max)");
         }
     }
 }

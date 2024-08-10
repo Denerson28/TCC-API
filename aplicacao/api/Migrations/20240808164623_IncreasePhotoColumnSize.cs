@@ -13,10 +13,10 @@ namespace api.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Photo",
                 table: "Users",
-                type: "nvarchar(max)", // Ou nvarchar(2000) para um tamanho específico
+                type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(255)"); // Tamanho anterior
+                oldType: "nvarchar(255)");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -24,10 +24,10 @@ namespace api.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Photo",
                 table: "Users",
-                type: "nvarchar(255)", // Tamanho anterior
+                type: "nvarchar(255)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)"); // Ou nvarchar(2000) para um tamanho específico
+                oldType: "nvarchar(max)");
         }
     }
 }

@@ -8,10 +8,11 @@ namespace api.Services.Interfaces
     {
         public List<UserRankingDTO> GetAll();
         public Task<UserSearchedDTO> Get(Guid id);
-        public Task<User> Create(UserDTO userDTO);
+        public Task<UserResponseDTO> Create(UserRequestDTO userDTO);
+        public Task<PublishResponseDTO> CreatePublish(Guid userId, PublishRequestDTO publish);
         public Task<UserUpdateDTO> Update(Guid Id,UserUpdateDTO userDTO);
         public Task<List<UserRankingDTO>> GetUsersRanking();
-        public Task<List<PublishDTO>> GetPublishesByUserId(Guid userId);
+        public Task<List<PublishRequestDTO>> GetPublishesByUserId(Guid userId);
         public User GetUserByEmail(string email);
         public bool CheckPassword(Guid userId, string password);
         public Task<List<RecommendResponseDTO>> GetRecommendsByUserId(Guid userId);

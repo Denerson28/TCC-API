@@ -28,7 +28,7 @@ namespace api.Services
         public async Task<Team> Get(Guid id)
         {
             return await _context.Teams
-                .Include(t => t.Users) // Inclui a propriedade de navegação Users
+                .Include(t => t.Users)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 

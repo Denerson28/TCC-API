@@ -50,14 +50,14 @@ namespace api.Controllers
 
                 if (team == null)
                 {
-                    return Results.NotFound(); // Retorna NotFound se o time não for encontrado
+                    return Results.NotFound();
                 }
 
-                return Results.Ok(team); // Retorna o time encontrado
+                return Results.Ok(team);
             }
             catch (Exception ex)
             {
-                return Results.StatusCode(500); // Retorna um erro interno do servidor se ocorrer uma exceção
+                return Results.StatusCode(500);
             }
 
         }

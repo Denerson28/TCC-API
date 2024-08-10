@@ -29,19 +29,15 @@ namespace api.Infra.Data
             builder.Entity<User>()
                 .Property(p => p.UserType).IsRequired();
 
-            // Configurar a chave primária da entidade User
             builder.Entity<User>()
                 .HasKey(u => u.Id);
 
-            // Configurar a chave primária da entidade Team
             builder.Entity<Team>()
                 .HasKey(t => t.Id);
 
-            //Configurar a chave primária da entidade Recommend
             builder.Entity<Recommend>()
                 .HasKey(r => r.Id);
 
-            //Configurar a chave primária da entidade Feedback
             builder.Entity<Feedback>()
                 .HasKey(f => f.Id);
 
@@ -49,20 +45,19 @@ namespace api.Infra.Data
             builder.Entity<Publish>().HasKey(p => p.Id);
 
 
-            // Configurar relacionamento um-para-muitos entre Team e User
             builder.Entity<Team>()
-                        .HasMany(t => t.Users)             // Um time pode ter muitos usuários
-                        .WithOne();                        // Um usuário pertence a um time
+                        .HasMany(t => t.Users)             
+                        .WithOne();
 
-            // Define a relação entre Publish e User
+            
             builder.Entity<User>()
-                        .HasMany(u => u.Publishes)          // Um Usuário pode ter várias publicações
-                        .WithOne();                        // O Pdf pertence a um usuário
+                        .HasMany(u => u.Publishes) 
+                        .WithOne(); 
 
-            // Define a relação entre Recommend e User
+            
             builder.Entity<User>()
-                        .HasMany(u => u.RecommendsReceived) // Um Usuário pode receber várias recomendações
-                        .WithOne();                        // A recomendação pertence a um usuário
+                        .HasMany(u => u.RecommendsReceived) 
+                        .WithOne();                        
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configuration)

@@ -17,6 +17,11 @@ namespace ApiTest.Fakes
         {
         }
 
-        public DbSet<Publish> PdfFiles { get; set; }
+        public DbSet<Publish> Publishes { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Recommend> Recommends { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Team> Teams { get; set; }
+
     }
 }

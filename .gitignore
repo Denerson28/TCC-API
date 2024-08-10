@@ -10,3 +10,5 @@
 /aplicacao/api/.config
 /aplicacao/api/bin/Release/net8.0
 /aplicacao/ApiTest/bin/Release/net8.0
+/aplicacao/apiTests/bin/Debug/net8.0
+/aplicacao/apiTests/obj

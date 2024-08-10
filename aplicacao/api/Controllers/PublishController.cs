@@ -21,7 +21,7 @@ namespace api.Controllers
 
 
         [HttpPost("{userId}")]
-        public async Task<IResult> Create(Guid userId, [FromBody] PublishDTO publish)
+        public async Task<IResult> Create(Guid userId, [FromBody] PublishRequestDTO publish)
         {
             try
             {

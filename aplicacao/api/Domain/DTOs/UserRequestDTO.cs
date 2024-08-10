@@ -7,7 +7,7 @@ using System.Diagnostics.Contracts;
 
 namespace api.Domain.DTOs
 {
-    public class UserDTO : Notifiable<Notification>
+    public class UserRequestDTO : Notifiable<Notification>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -16,16 +16,12 @@ namespace api.Domain.DTOs
         public string UserType { get; set; }
         public string Role { get; set; }
         public Guid TeamId { get; set; }
-        public int Stars { get; set; }
-        public ICollection<Publish> Publishes { get; set; }
-        public ICollection<Recommend> RecommendsReceived { get; set; }
-        public ICollection<Feedback> FeedbacksReceived { get; set; }
         public string Photo { get; set; }
         public string TeamName { get;  set; }
 
         private void Validate()
         {
-            var contract = new Contract<UserDTO>()
+            var contract = new Contract<UserRequestDTO>()
                 .IsNotNullOrEmpty(Name, "Name")
                 .IsEmail(Email, "Email")
                 .IsNotNullOrEmpty(Password, "Password")
@@ -36,12 +32,12 @@ namespace api.Domain.DTOs
 
         }
 
-        public UserDTO()
+        public UserRequestDTO()
         {
 
         }
 
-        public UserDTO(User user)
+        public UserRequestDTO(User user)
         {
             Id = user.Id;
             Name = user.Name;
@@ -50,9 +46,6 @@ namespace api.Domain.DTOs
             UserType = user.UserType;
             Role = user.Role;
             TeamId = user.TeamId;
-            Publishes = user.Publishes;
-            RecommendsReceived = user.RecommendsReceived;
-            FeedbacksReceived = user.FeedbacksReceived;
             Validate();
         }
     }

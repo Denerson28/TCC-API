@@ -7,20 +7,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração do banco de dados
 builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["ConnectionString:sqlserver"]);
 
-// Injeção de dependência dos serviços
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IPublishService, PublishService>();
 
-// Configuração dos controladores e Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuração da autenticação e JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,10 +56,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:5173") // Permitir apenas estas origens
+        builder.WithOrigins("http://localhost:5173")
                .AllowAnyMethod()
                .AllowAnyHeader()
-               .AllowCredentials(); // Permite o uso de cookies e headers de autorização
+               .AllowCredentials();
     });
 });
 
@@ -82,7 +78,7 @@ using (var scope = app.Services.CreateScope())
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
         var seeder = new DataSeeder(dbContext);
-        seeder.Seed(); // Seed the database
+        seeder.Seed();
     }
     catch (Exception ex)
     {
@@ -94,7 +90,6 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// Aplicar o middleware de CORS antes de Authentication e Authorization
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();

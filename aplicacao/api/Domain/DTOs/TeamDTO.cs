@@ -20,5 +20,9 @@ namespace api.Domain.DTOs
             Name = name;
             Validate();
         }
+
+        public TeamDTO()
+        {
+        }
     }
 }

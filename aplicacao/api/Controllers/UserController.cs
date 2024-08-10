@@ -23,7 +23,7 @@ namespace api.Controllers
 
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
-        public async Task<IResult> CreateAsync(UserDTO userDTO)
+        public async Task<IResult> CreateAsync(UserRequestDTO userDTO)
         {
             if(userDTO == null)
             {
@@ -37,12 +37,12 @@ namespace api.Controllers
 
             try
             {
-                User user = await _userService.Create(userDTO);
-                return Results.Created($"user/{user.Id}", user); // Retorna um resultado Ok com o usuário criado
+                UserResponseDTO user = await _userService.Create(userDTO);
+                return Results.Created($"user/{user.Id}", user);
             }
             catch (Exception ex)
             {
-                return Results.BadRequest(ex.Message); // Retorna um resultado de erro com a mensagem de exceção
+                return Results.BadRequest(ex.Message);
             }
         }
 
@@ -56,14 +56,14 @@ namespace api.Controllers
 
                 if (userSearched == null)
                 {
-                    return Results.NotFound(); // Retorna NotFound se o usuário não for encontrado
+                    return Results.NotFound();
                 }
 
-                return Results.Ok(userSearched); // Retorna o usuário encontrado
+                return Results.Ok(userSearched);
             }
             catch (Exception ex)
             {
-                return Results.StatusCode(500); // Retorna um erro interno do servidor se ocorrer uma exceção
+                return Results.StatusCode(500);
             }
         }
 
@@ -163,6 +163,25 @@ namespace api.Controllers
             catch (Exception ex)
             {
                 return Results.BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("{userId}/publish")]
+        public async Task<IResult> CreatePublish(Guid userId, [FromBody] PublishRequestDTO publish)
+        {
+            try
+            {
+                var response = await _userService.CreatePublish(userId, publish);
+                if (response == null)
+                {
+                    return Results.BadRequest();
+                }
+                return Results.Created();
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500);
             }
         }
     }

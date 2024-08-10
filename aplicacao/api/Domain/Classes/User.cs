@@ -16,7 +16,7 @@
         public ICollection<Feedback> FeedbacksReceived { get; set; }
 
         public ICollection<Publish> Publishes { get; set; }
-        public string Photo { get; internal set; }
+        public string Photo { get;  set; }
 
         public User()
         {

@@ -4,7 +4,7 @@ using Flunt.Validations;
 
 namespace api.Domain.DTOs
 {
-    public class PublishDTO : Notifiable<Notification>
+    public class PublishRequestDTO : Notifiable<Notification>
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -17,13 +17,13 @@ namespace api.Domain.DTOs
 
         private void Validate()
         {
-            var contract = new Contract<PublishDTO>()
+            var contract = new Contract<PublishRequestDTO>()
                 .IsNotNullOrEmpty(Description, "Description");
                 
 
             AddNotifications(contract);
         }
-        public PublishDTO(Guid id, string title, string image, string description) 
+        public PublishRequestDTO(Guid id, string title, string image, string description) 
         {
             this.Id = id;
             this.Title = title;
@@ -33,7 +33,7 @@ namespace api.Domain.DTOs
             Validate();
         }
 
-        public PublishDTO(Publish publish) 
+        public PublishRequestDTO(Publish publish) 
         {
             this.Id = publish.Id;
             this.Title = publish.Title;
@@ -42,6 +42,6 @@ namespace api.Domain.DTOs
             this.CreatedAt = publish.CreatedAt;
         }
 
-        public PublishDTO() { }
+        public PublishRequestDTO() { }
     }
 }

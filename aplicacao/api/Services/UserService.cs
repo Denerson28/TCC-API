@@ -16,7 +16,7 @@ namespace api.Services
             _context = context;
         }
 
-        public async Task<User> Create(UserDTO userDTO)
+        public async Task<UserResponseDTO> Create(UserRequestDTO userDTO)
         {
             using (var register = _context.Database.BeginTransaction())
             {
@@ -40,13 +40,13 @@ namespace api.Services
 
                     await _context.SaveChangesAsync();
                     await register.CommitAsync();
-
-                    return user; // Retorna o novo usuário criado
+                    UserResponseDTO userResponse = new UserResponseDTO(user);
+                    return userResponse;
                 }
                 catch (Exception ex)
                 {
                     await register.RollbackAsync();
-                    throw; // Re-lança a exceção para ser tratada externamente
+                    throw;
                 }
             }
         }
@@ -85,7 +85,6 @@ namespace api.Services
                 throw new Exception("Usuário não encontrado");
             }
 
-            // Atualiza os campos do usuário com os novos valores
             existingUser.Name = userDTO.Name;
             existingUser.Photo = userDTO.Photo;
 
@@ -115,7 +114,6 @@ namespace api.Services
                 throw new Exception("Usuário não encontrado");
             }
 
-            // Verifica se a senha fornecida corresponde à senha armazenada
             return BCrypt.Net.BCrypt.Verify(password, user.Password);
         }
 
@@ -134,7 +132,7 @@ namespace api.Services
             return usersRanking;
         }
 
-        public async Task<List<PublishDTO>> GetPublishesByUserId(Guid userId)
+        public async Task<List<PublishRequestDTO>> GetPublishesByUserId(Guid userId)
         {
             var user = await _context.Users.FindAsync(userId);
 
@@ -145,11 +143,11 @@ namespace api.Services
 
             var publishesEntity = await _context.Publishes.Where(p => p.UserId == userId).ToListAsync();
 
-            List<PublishDTO> publishes = new List<PublishDTO>();
+            List<PublishRequestDTO> publishes = new List<PublishRequestDTO>();
 
             foreach (var publish in publishesEntity)
             {
-                publishes.Add(new PublishDTO(publish));
+                publishes.Add(new PublishRequestDTO(publish));
             }
 
             return publishes;
@@ -283,6 +281,46 @@ namespace api.Services
             catch (Exception ex)
             {
                 throw new ApplicationException($"Error while sending and saving recommendation: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<PublishResponseDTO> CreatePublish(Guid userId, PublishRequestDTO publish)
+        {
+            if (string.IsNullOrEmpty(publish.Image))
+            {
+                throw new ArgumentException("Nenhum arquivo enviado.");
+            }
+
+            try
+            {
+
+                var newPublishFile = new Publish
+                {
+                    Title = publish.Title,
+                    Image = publish.Image,
+                    UserId = userId,
+                    Description = publish.Description
+                };
+
+                _context.Publishes.Add(newPublishFile);
+                await _context.SaveChangesAsync();
+
+                var user = await _context.Users.Include(u => u.Publishes).FirstOrDefaultAsync(u => u.Id == userId);
+                if (user != null)
+                {
+                    user.Publishes.Add(newPublishFile);
+
+                    user.Stars += 3;
+
+                    await _context.SaveChangesAsync();
+
+                    return new PublishResponseDTO(newPublishFile);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao enviar e salvar publicacao: {ex.Message}");
             }
         }
     }
