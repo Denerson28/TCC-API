@@ -69,5 +69,43 @@ namespace api.Controllers
 
             return Results.Ok(teams);
         }
+
+        [HttpDelete("{teamId}")]
+        public async Task<IResult> Delete(Guid teamId)
+        {
+            try
+            {
+                await _teamService.Delete(teamId);
+                return Results.NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{teamId}")]
+        public async Task<IResult> Update(Guid teamId, TeamDTO teamDTO)
+        {
+            if (teamDTO == null)
+            {
+                return Results.BadRequest();
+            }
+
+            if (!teamDTO.IsValid)
+            {
+                return Results.ValidationProblem(teamDTO.Notifications.ConvertToProblemDetails());
+            }
+
+            try
+            {
+                await _teamService.Update(teamId, teamDTO);
+                return Results.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+        }
     }
 }

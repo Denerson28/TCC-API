@@ -25,6 +25,14 @@ namespace api.Services
             return team;
         }
 
+        public async Task Delete(Guid id)
+        {
+            Team team = await Get(id);
+
+            _context.Remove(team);
+            _context.SaveChanges();
+        }
+
         public async Task<Team> Get(Guid id)
         {
             return await _context.Teams
@@ -35,6 +43,16 @@ namespace api.Services
         public async Task<List<Team>> GetAll()
         {
             return await _context.Teams.ToListAsync();
+        }
+
+        public async Task Update(Guid teamId, TeamDTO teamDTO)
+        {
+            Team team = await Get(teamId);
+
+            team.Name = teamDTO.Name;
+
+            _context.Update(team);
+            _context.SaveChanges();
         }
     }
 }

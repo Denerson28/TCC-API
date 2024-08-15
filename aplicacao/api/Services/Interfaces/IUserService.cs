@@ -9,6 +9,7 @@ namespace api.Services.Interfaces
         public List<UserRankingDTO> GetAll();
         public Task<UserSearchedDTO> Get(Guid id);
         public Task<UserResponseDTO> Create(UserRequestDTO userDTO);
+        public Task Delete(Guid id);
         public Task<PublishResponseDTO> CreatePublish(Guid userId, PublishRequestDTO publish);
         public Task<UserUpdateDTO> Update(Guid Id,UserUpdateDTO userDTO);
         public Task<List<UserRankingDTO>> GetUsersRanking();

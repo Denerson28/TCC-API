@@ -15,6 +15,23 @@ namespace api.Services
             _context = context;
         }
 
+        public async Task<PublishResponseDTO> Get(Guid publishId)
+        {
+            try
+            {
+                var publish = await _context.Publishes.FirstOrDefaultAsync(u => u.Id == publishId);
+                if (publish != null)
+                {
+                    return new PublishResponseDTO(publish);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao buscar publicacoes: {ex.Message}");
+            }
+
+            return null;
+        }
         public async Task<PublishResponseDTO> Upload(Guid userId, PublishRequestDTO publish)
         {
             try
@@ -48,6 +65,49 @@ namespace api.Services
             }
 
             return null;
+        }
+
+        public async Task Delete(Guid userId, Guid publishId)
+        {
+            try
+            {
+                var user = await _context.Users.Include(u => u.Publishes).FirstOrDefaultAsync(u => u.Id == userId);
+                if (user != null)
+                {
+                    var publish = user.Publishes.FirstOrDefault(p => p.Id == publishId);
+                    if (publish != null)
+                    {
+                        user.Publishes.Remove(publish);
+                        _context.Publishes.Remove(publish);
+
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao deletar publicacao: {ex.Message}");
+            }
+        }
+
+        public async Task Update(Guid publishId, PublishRequestDTO publish)
+        {
+            try
+            {
+                var publishFile = await _context.Publishes.FirstOrDefaultAsync(p => p.Id == publishId);
+                if (publishFile != null)
+                {
+                    publishFile.Title = publish.Title;
+                    publishFile.Image = publish.Image;
+                    publishFile.Description = publish.Description;
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao atualizar publicacao: {ex.Message}");
+            }
         }
     }
 }

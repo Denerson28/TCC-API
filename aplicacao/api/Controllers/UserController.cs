@@ -46,6 +46,21 @@ namespace api.Controllers
             }
         }
 
+        [HttpDelete("{userId}")]
+        public async Task<IResult> Delete(Guid userId)
+        {
+            try
+            {
+                await _userService.Delete(userId);
+                return Results.NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("{userId}")]
         public async Task<IResult> Get(Guid userId)
         {
@@ -67,12 +82,12 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{Id}")]
-        public async Task<IResult> UpdateUser(Guid Id, UserUpdateDTO userUpdateDTO)
+        [HttpPut("{userId}")]
+        public async Task<IResult> UpdateUser(Guid userId, UserUpdateDTO userUpdateDTO)
         {
             try
             {
-                UserUpdateDTO updatedUser = await _userService.Update(Id, userUpdateDTO);
+                UserUpdateDTO updatedUser = await _userService.Update(userId, userUpdateDTO);
 
                 return Results.Ok(updatedUser);
             }

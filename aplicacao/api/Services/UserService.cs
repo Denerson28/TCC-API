@@ -51,6 +51,19 @@ namespace api.Services
             }
         }
 
+        public async Task Delete(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<UserSearchedDTO> Get(Guid id)
         {
 
@@ -323,5 +336,6 @@ namespace api.Services
                 throw new ApplicationException($"Erro ao enviar e salvar publicacao: {ex.Message}");
             }
         }
+
     }
 }
