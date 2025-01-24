@@ -35,7 +35,7 @@ namespace ApiTest.Fakes
                 users.Add(new User
                 {
                     Id = Guid.NewGuid(),
-                    Email = $"testuser{i}@example.com",
+                    Email = $"testuserbla{i}@example.com",
                     Password = "hashedpassword123",
                     UserType = "User",
                     Role = "Developer",
